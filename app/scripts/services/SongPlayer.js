@@ -7,7 +7,7 @@
         * @type {object}
         */
 
-        var currentSong = null;
+        SongPlayer.currentSong = null;
         var currentBuzzObject = null;
 
 
@@ -28,7 +28,7 @@
                 preload: true
             });
 
-            currentSong = song;
+            SongPlayer.currentSong = song;
         };
 
 
@@ -49,10 +49,10 @@
         */
 
         SongPlayer.play = function(song) {
-            if (currentSong !== song) {
+            if (SongPlayer.currentSong !== song) {
                 setSong(song);
                 playSong(song);
-            } else if (currentSong === song) {
+            } else if (SongPlayer.currentSong === song) {
                 if (currentBuzzObject.isPaused()) {
                     currentBuzzObject.play();
                 }
