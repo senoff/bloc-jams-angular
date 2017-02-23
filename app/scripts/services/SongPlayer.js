@@ -1,5 +1,5 @@
 (function() {
-    function SongPlayer(Fixtures) {
+    function SongPlayer(scope,Fixtures) {
         var SongPlayer = {};
 
         /**
@@ -36,7 +36,6 @@
         * @desc Stops currently playing song and loads new audio file as currentBuzzObject
         * @param {object} song
         */
-
         var setSong = function(song) {
             if (currentBuzzObject){
                 currentBuzzObject.stop();
@@ -92,12 +91,25 @@
         };
 
         /**
-        / @function
+        * @function SongPlayer.previous
+        * @desc Gets the index of the current song decrease it by 1
+        * @param
         */
         SongPlayer.previous = function() {
             var currentSongIndex = getSongIndex(SongPlayer.currentSong);
             currentSongIndex--;
-        }
+
+
+            if (currentSongIndex < 0) {
+                currentBuzzObject.stop();
+                SongPlayer.currentSong.playing = null;
+            } else {
+                var song = currentAlbum.songs[currentSongIndex];
+                setSong(song);
+                playSong(song);
+            }
+        };
+
 
         return SongPlayer;
     }
