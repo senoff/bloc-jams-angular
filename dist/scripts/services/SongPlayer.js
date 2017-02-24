@@ -60,12 +60,16 @@
             SongPlayer.currentSong.playing = true;
         }
 
+        var stopSong = function(song){
+            currentBuzzObject.stop();
+            SongPlayer.currentSong.playing = null;
+        }
+
         /**
         * @function Songplayer.play
         * @desc Called through Album.html on the play button ng-click and then through AlbumCtrl
         * @param {object} song
         */
-
         SongPlayer.play = function(song) {
             song = song || SongPlayer.currentSong;
             if (SongPlayer.currentSong !== song) {
@@ -90,6 +94,16 @@
             song.playing = false;
         };
 
+        SongPlayer.next = function(){
+            var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+            currentSongIndex++;
+            currentSongIndex = currentSongIndex % currentAlbum.songs.length;
+
+            var song = currentAlbum.songs[currentSongIndex];
+            setSong(song);
+            playSong(song);
+        };
+
         /**
         * @function SongPlayer.previous
         * @desc Gets the index of the current song decrease it by 1
@@ -99,10 +113,11 @@
             var currentSongIndex = getSongIndex(SongPlayer.currentSong);
             currentSongIndex--;
 
-
             if (currentSongIndex < 0) {
-                currentBuzzObject.stop();
-                SongPlayer.currentSong.playing = null;
+                currentSongIndex = currentAlbum.songs.length - 1;
+                var song = currentAlbum.songs[currentSongIndex];
+                setSong(song);
+                playSong(song);
             } else {
                 var song = currentAlbum.songs[currentSongIndex];
                 setSong(song);
@@ -110,6 +125,11 @@
             }
         };
 
+        SongPlayer.secondsToMinutes = function(seconds, minutes){
+            minutes = 0;
+            minutes = Math.floor(seconds / 60);
+            seconds = seconds % 60
+        };
 
         return SongPlayer;
     }
