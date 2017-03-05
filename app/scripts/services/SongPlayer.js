@@ -1,5 +1,5 @@
 (function() {
-    function SongPlayer(scope,Fixtures) {
+    function SongPlayer($rootScope, Fixtures) {
         var SongPlayer = {};
 
         /**
@@ -29,6 +29,12 @@
         * @type {object}
         */
 
+        /**
+        * @desc Current playback time (in second) of currently playing song
+        * @type {Number}
+        */
+        SongPlayer.currentTime = null;
+
         var currentBuzzObject = null;
 
         /**
@@ -45,6 +51,12 @@
             currentBuzzObject = new buzz.sound(song.audioUrl, {
                 formats: ['mp3'],
                 preload: true
+            });
+
+            currentBuzzObject.bind('timeupdate', function(){
+                $rootScope.$apply(function(){
+                    songPlayer.currentTime = currentBuzzObject.getTime();
+                });
             });
 
             SongPlayer.currentSong = song;
@@ -115,6 +127,18 @@
         * @desc Gets the index of the current song decrease it by 1
         * @param
         */
+
+        /**
+        * @function setCurrentTime
+        * @desc Set current time (in seconds) of currently playing song
+        * @param {Number} time
+        */
+        SongPlayer.setCurrentTime = function(time) {
+            if (currentBuzzObject){
+                currentBuzzObject.setTime(time);
+            }
+        };
+
         SongPlayer.previous = function() {
             var currentSongIndex = getSongIndex(SongPlayer.currentSong);
             currentSongIndex--;
