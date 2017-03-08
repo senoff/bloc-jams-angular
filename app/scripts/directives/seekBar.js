@@ -9,14 +9,6 @@
             return offsetXPercent;
         };
 
-        var calculatePercent = function(seekBar, event) {
-            var offsetX = event.pageX - seekBar.offset().left;
-            var seekBarWidth = seekBar.width();
-            var offsetXPercent = offsetX / seekBarWidth;
-            offsetXPercent = Math.max(0, offsetXPercent);
-            offsetXPercent = Math.min(1, offsetXPercent);
-            return offsetXPercent;
-        };
 
         return {
             templateUrl: '/templates/directives/seek_bar.html',
@@ -39,12 +31,17 @@
                     scope.max = newValue;
                 });
 
+                attributes.$observe('volume', function(newValue){
+                    scope.value = newValue;
+                });
+
                 var percentString = function () {
                     var value = scope.value;
                     var max = scope.max;
                     var percent = value / max * 100;
                     return percent + "%";
                 };
+
 
                 scope.fillStyle = function() {
                     return {width: percentString()};
@@ -57,6 +54,7 @@
                 scope.onClickSeekBar = function(event) {
                     var percent = calculatePercent(seekBar, event);
                     scope.value = percent * scope.max;
+                    scope.volume = percent * scope.max;
                     notifyOnChange(scope.value);
                 };
 

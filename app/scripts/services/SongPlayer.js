@@ -1,6 +1,6 @@
 (function() {
     function SongPlayer($rootScope, Fixtures) {
-        var SongPlayer = {};
+        SongPlayer = {};
 
         /**
         * @desc Get the album from Fixtures.js
@@ -35,6 +35,12 @@
         */
         SongPlayer.currentTime = null;
 
+        /**
+        * @desc Current volume
+        * @type {Number
+        */
+        SongPlayer.volume = 0;
+
         var currentBuzzObject = null;
 
         /**
@@ -55,7 +61,7 @@
 
             currentBuzzObject.bind('timeupdate', function(){
                 $rootScope.$apply(function(){
-                    songPlayer.currentTime = currentBuzzObject.getTime();
+                    SongPlayer.currentTime = currentBuzzObject.getTime();
                 });
             });
 
@@ -139,6 +145,12 @@
             }
         };
 
+        SongPlayer.setVolume = function(volume){
+            if (currentBuzzObject){
+                currentBuzzObject.setVolume(volume);
+            }
+        };
+
         SongPlayer.previous = function() {
             var currentSongIndex = getSongIndex(SongPlayer.currentSong);
             currentSongIndex--;
@@ -153,12 +165,6 @@
                 setSong(song);
                 playSong(song);
             }
-        };
-
-        SongPlayer.secondsToMinutes = function(seconds, minutes){
-            minutes = 0;
-            minutes = Math.floor(seconds / 60);
-            seconds = seconds % 60
         };
 
         return SongPlayer;
